@@ -18,6 +18,21 @@ const initialObj: Array<Todo> = [
 ];
 
 const App: React.FunctionComponent = () => {
+  const [toggles, setToggle] = useState(initialObj);  
+
+  const getChangeToggle = (toggleObj: Todo) => {
+    const newToggle = toggles.map((toggle) => {
+      if (toggle === toggleObj){
+        return {
+          ...toggle,
+          check: !toggle.check
+        }
+      }
+      return toggle
+    })
+    setToggle(newToggle);
+  }
+
   return (
     <>
       <TodoListItem todo={initialObj[0]} getChangeName = {getChangeToggle}/>
