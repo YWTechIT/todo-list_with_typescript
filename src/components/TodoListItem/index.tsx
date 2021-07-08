@@ -6,18 +6,27 @@ interface TodoListItemProps {
   check: boolean;
 }
 
+type getChangeToggle = (toggleObj: TodoListItemProps) => void;
+
 interface Props {
   todo: TodoListItemProps;
+  getChangeName: getChangeToggle;
 }
 
-const TodoListItem: React.FunctionComponent<Props> = ({ todo }) => {
+const TodoListItem: React.FunctionComponent<Props> = (props) => {
+  const {todo, getChangeName} = props;
+  console.log(todo);
+  
   return (
     <li>
-      <label className = {todo.check ? "complete" : undefined}>
-        <input type="checkbox" checked={todo.check} /> {todo.text}
+      <label className={todo.check ? "complete" : undefined}>
+        <input
+          type="checkbox"
+          checked={todo.check}
+          onChange={() => getChangeName(todo)}
+        />
+        {todo.text}
       </label>
-
-      <div>{todo.check}</div>
     </li>
   );
 };
