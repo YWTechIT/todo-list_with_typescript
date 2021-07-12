@@ -19,6 +19,7 @@ const App:React.FunctionComponent = () => {
   return (
     <>
       <div>안되면 될 때까지 시도하기 U can do it!</div>
+      <div>2주차 - getToggle 함수 생성</div>
       <TodoItemBox todos={TODO_CONSTANT}></TodoItemBox>
     </>
   );
