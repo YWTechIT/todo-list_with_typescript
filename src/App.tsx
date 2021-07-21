@@ -7,6 +7,7 @@ import Title, { TodoWrapper } from "./components/Title";
 import { useRef, useState } from "react";
 import DONE_TODO_CONSTANT from "./DONE_TODO_CONSTANT";
 import "./App.css";
+import getOrderIdASC from "./utility/getOrderIdASC";
 
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>(TODO_CONSTANT);
@@ -22,6 +23,7 @@ const App = () => {
       done: false,
     };
     setTodos(todos.concat(newTodo));
+    setInput("");
     nextId.current += 1;
   };
 
@@ -31,7 +33,8 @@ const App = () => {
 
   const onRemoveTodo = (id: string) => {
     const newTodo = todos.filter((item) => item.id !== id);
-    setTodos(newTodo);
+    const newOrderTodo = getOrderIdASC(newTodo)
+    setTodos(newOrderTodo);
     nextId.current -= 1;
   };
 
@@ -39,7 +42,7 @@ const App = () => {
     <Container>
       <Title />
       <form onSubmit={onAddTodo}>
-        <input onChange={handleInput} />
+        <input onChange={handleInput} value={input}/>
         <button>추가</button>
       </form>
       <TodoContainer>
@@ -49,7 +52,11 @@ const App = () => {
         </TodoWrapper>
 
         <TodoWrapper>
-          <h2> Todo Done List</h2>
+          <h2>✅ Todo Done List</h2>
+          <TodoItemBox
+            todos={doneTodos}
+            onRemoveTodo={onRemoveTodo}
+          ></TodoItemBox>
         </TodoWrapper>
       </TodoContainer>
     </Container>
