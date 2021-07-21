@@ -1,26 +1,25 @@
-import React from "react";
 import TodoItemBox from "./components/TodoItemBox";
-import {Todo} from './components/TodoItem';
+import { Todo } from "./components/TodoItem";
+import TODO_CONSTANT from "./TODO_CONSTANT";
+import Container, { TodoContainer } from "./components/Container";
+import Title, { TodoWrapper } from "./components/Title";
 
-const TODO_CONSTANT: Todo[] = [
-  {
-    id: 1,
-    text: '타입스크립트',
-    done: true
-  },
-  {
-    id: 2,
-    text: '파이썬 알고리즘',
-    done: false
-  },
-]
-
-const App:React.FunctionComponent = () => {
+const App = () => {
   return (
-    <>
-      <div>안되면 될 때까지 시도하기 U can do it!</div>
-      <TodoItemBox todos={TODO_CONSTANT}></TodoItemBox>
-    </>
+    <Container>
+      <Title />
+      <TodoContainer>
+        <TodoWrapper>
+          <h2>Todo List</h2>
+          <TodoItemBox todos={TODO_CONSTANT}></TodoItemBox>
+        </TodoWrapper>
+
+        <TodoWrapper>
+          <h2>Todo Done List</h2>
+          <TodoItemBox todos={TODO_CONSTANT}></TodoItemBox>
+        </TodoWrapper>
+      </TodoContainer>
+    </Container>
   );
 };
 
