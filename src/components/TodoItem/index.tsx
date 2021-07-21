@@ -4,13 +4,20 @@ export interface Todo {
   done: boolean;
 }
 
-const TodoItem = ({ id, text, done }: Todo) => {
+interface TodoProps {
+  id: string;
+  text: string;
+  done: boolean;
+  onRemoveTodo: (id: string) => void;
+}
+
+const TodoItem = ({ id, text, done, onRemoveTodo }: TodoProps) => {
   return (
     <li id={id}>
       <label className={done ? "complete" : undefined}>
-        <input type="checkbox" value={text} checked={done} />
+        <input type="checkbox" value={text} />
         {text}
-        <button>x</button>
+        <button onClick={() => onRemoveTodo(id)}>x</button>
       </label>
     </li>
   );

@@ -6,7 +6,7 @@ import Container, { TodoContainer } from "./components/Container";
 import Title, { TodoWrapper } from "./components/Title";
 import { useRef, useState } from "react";
 import DONE_TODO_CONSTANT from "./DONE_TODO_CONSTANT";
-import './App.css';
+import "./App.css";
 
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>(TODO_CONSTANT);
@@ -14,32 +14,38 @@ const App = () => {
   const [input, setInput] = useState<string>("");
   const nextId = useRef<number>(todos.length + 1);
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onAddTodo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const newTodo = {
       id: String(nextId.current),
       text: input,
-      done: false
-    }
-    setTodos(todos.concat(newTodo))
-    nextId.current += 1
-  }
+      done: false,
+    };
+    setTodos(todos.concat(newTodo));
+    nextId.current += 1;
+  };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value)
-  }
+    setInput(e.target.value);
+  };
+
+  const onRemoveTodo = (id: string) => {
+    const newTodo = todos.filter((item) => item.id !== id);
+    setTodos(newTodo);
+    nextId.current -= 1;
+  };
 
   return (
     <Container>
       <Title />
-      <form onSubmit={handleOnSubmit}>
-        <input onChange={handleInput}/>
+      <form onSubmit={onAddTodo}>
+        <input onChange={handleInput} />
         <button>추가</button>
       </form>
       <TodoContainer>
         <TodoWrapper>
           <h2>❎ Todo List</h2>
-          <TodoItemBox todos={todos}></TodoItemBox>
+          <TodoItemBox todos={todos} onRemoveTodo={onRemoveTodo}></TodoItemBox>
         </TodoWrapper>
 
         <TodoWrapper>
