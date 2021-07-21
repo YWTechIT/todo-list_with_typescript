@@ -1,19 +1,23 @@
 import React from "react";
 
-export interface Todo {
-  id: number;
+export interface TodoType {
+  id: string;
   text: string;
   done: boolean;
 }
 
-const TodoItem = (props: Todo) => {
-  const { text, done } = props;
+interface Todo {
+  todo: TodoType
+  getToggleState: (id: string) => void;
+}
+
+const TodoItem = ({ todo, getToggleState}: Todo) => {
 
   return (
-    <li>
-      <label>
-        <input type="checkbox" />
-        {text}
+    <li id={todo.id}>
+      <label className={todo.done ? "complete" : undefined}>
+        <input type="checkbox" checked={todo.done} onChange={() => getToggleState(todo.id)} />
+        {todo.text}
       </label>
     </li>
   );
