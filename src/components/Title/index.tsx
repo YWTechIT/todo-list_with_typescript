@@ -4,7 +4,7 @@ export const TodoWrapper = styled.div`
   border: 3px solid black;
   width: 90%;
   height: 90%;
-  margin: 8px 8px;
+  margin: 32px;
   text-align: center;
 `;
 
