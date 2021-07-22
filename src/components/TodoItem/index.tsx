@@ -1,23 +1,24 @@
-import React from "react";
-
-export interface TodoType {
+export interface Todo {
   id: string;
   text: string;
   done: boolean;
 }
 
-interface Todo {
-  todo: TodoType
-  getToggleState: (id: string) => void;
+interface TodoProps {
+  id: string;
+  text: string;
+  done: boolean;
+  onRemoveTodo: (id: string) => void;
+  onToggleTodo: (id: string) => void;
 }
 
-const TodoItem = ({ todo, getToggleState}: Todo) => {
-
+const TodoItem = ({ id, text, done, onRemoveTodo, onToggleTodo }: TodoProps) => {
   return (
-    <li id={todo.id}>
-      <label className={todo.done ? "complete" : undefined}>
-        <input type="checkbox" checked={todo.done} onChange={() => getToggleState(todo.id)} />
-        {todo.text}
+    <li id={id}>
+      <label className={done ? "complete" : undefined} >
+        <input type="checkbox" value={text} checked={done} readOnly onClick={() => onToggleTodo(id)}/>
+        {text}
+        <button onClick={() => onRemoveTodo(id)}>x</button>
       </label>
     </li>
   );

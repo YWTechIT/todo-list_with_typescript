@@ -1,20 +1,19 @@
-import React from "react";
-import TodoItem, { TodoType } from "../TodoItem";
+import TodoItem, { Todo } from "../TodoItem";
 
 interface Todos {
-  todos: TodoType[];
-  getToggleState: (id: string) => void;
+  todos: Todo[];
+  onRemoveTodo: (id: string) => void;
+  onToggleTodo: (id: string) => void;
 }
 
-const TodoItemBox = ({todos, getToggleState}: Todos) => {
-
+const TodoItemBox = ({todos, onToggleTodo,onRemoveTodo}: Todos) => {
   return (
     <>
-      <ul>
+      <ol>
         {todos.map((todo) => (
-          <TodoItem todo={todo} key={todo.id} getToggleState={getToggleState}></TodoItem>
+          <TodoItem {...todo} key={todo.id} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo}></TodoItem>
         ))}
-      </ul>
+      </ol>
     </>
   );
 };

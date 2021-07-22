@@ -1,94 +1,92 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import "./App.css";
 import TodoItemBox from "./components/TodoItemBox";
-import { TodoType } from "./components/TodoItem";
+import { Todo } from "./components/TodoItem";
+import TODO_CONSTANT from "./TODO_CONSTANT";
+import Container, { TodoContainer } from "./components/Container";
+import Title, { TodoWrapper } from "./components/Title";
+import { useRef, useState } from "react";
+import DONE_TODO_CONSTANT from "./DONE_TODO_CONSTANT";
+import getOrderIdASC from "./utility/getOrderIdASC";
 
-const TODO_CONSTANT: TodoType[] = [
-  {
-    id: "1",
-    text: "타입스크립트",
-    done: true,
-  },
-  {
-    id: "2",
-    text: "파이썬 알고리즘",
-    done: true,
-  },
-  {
-    id: "3",
-    text: "수영하기",
-    done: false,
-  },
-];
+const App = () => {
+  const [todos, setTodos] = useState<Todo[]>(TODO_CONSTANT);
+  const [doneTodos, setDoneTodos] = useState<Todo[]>(DONE_TODO_CONSTANT);
+  const [input, setInput] = useState<string>("");
+  const nextTodoId = useRef<number>(todos.length + 1);
+  const nextDoneTodoId = useRef<number>(doneTodos.length + 1);
 
-const App: React.FunctionComponent = () => {
-  const [todos, setTodos] = useState<TodoType[]>(TODO_CONSTANT);
-  const [inputTitle, setInputTitle] = useState<string>("");
-  const [todoId, setTodoId] = useState<number>(todos.length);
+  const onAddTodo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newTodo: Todo = {
+      id: String(nextTodoId.current),
+      text: input,
+      done: false,
+    };
 
-  const getToggleState = (id: string) => {
-    const newTodo = todos.map((todo) =>
-      todo.id === id ? { ...todo, done: !todo.done } : todo
-    );
-    console.log(` 변경된 state = ${id}`);
-    setTodos(newTodo);
-  };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputTitle(e.target.value);
-  };
-
-  const handleClick = () => {
-    let currentTodo: TodoType[] = [...todos];
-    let currentId: number = todoId + 1;
-
-    if (inputTitle === "") {
-      alert("내용을 입력해주세요!");
-    } else {
-      const newTodo = {
-        id: String(currentId),
-        text: inputTitle,
-        done: false,
-      };
-
-      currentTodo.push(newTodo);
-      setTodos(currentTodo);
-      setTodoId(currentId);
-      setInputTitle("");
-      console.log(currentTodo);
+    if (input && true) {
+      setTodos(todos.concat(newTodo));
     }
+    setInput("");
+    nextTodoId.current += 1;
   };
 
-  const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleClick();
-    }
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const onToggleTodo = (id: string) => {
+    const moveTodo: Todo[] = todos.filter((item) => item.id === id);
+    const restTodo: Todo[] = todos.filter((item) => item.id !== id);
+    const newRestTodoOrderId = getOrderIdASC(restTodo);
+    setTodos(newRestTodoOrderId);
+
+    const newTodo = {
+      ...moveTodo[0],
+      id: String(nextDoneTodoId.current),
+      done: true,
+    };
+
+    setDoneTodos(doneTodos.concat(newTodo));
+
+    nextDoneTodoId.current += 1;
+    nextTodoId.current -= 1;
+  };
+
+  const onRemoveTodo = (id: string) => {
+    const newTodo: Todo[] = todos.filter((item) => item.id !== id);
+    const newOrderTodo: Todo[] = getOrderIdASC(newTodo);
+    setTodos(newOrderTodo);
+    nextTodoId.current -= 1;
   };
 
   return (
-    <>
-      <ul>
-        <h1> ❏ 안되면 될 때까지 시도하기 U can do it!</h1>
-        <h2> ☉ 3주차 - input 내용 입력 후 버튼 클릭하면 목록 추가하기</h2>
-      </ul>
+    <Container>
+      <Title />
+      <form onSubmit={onAddTodo}>
+        <input onChange={handleInput} value={input} />
+        <button>추가</button>
+      </form>
+      <TodoContainer>
+        <TodoWrapper>
+          <h2>❎ Todo List</h2>
+          <TodoItemBox
+            todos={todos}
+            onRemoveTodo={onRemoveTodo}
+            onToggleTodo={onToggleTodo}
+          ></TodoItemBox>
+        </TodoWrapper>
 
-      <div>
-        <ul>
-          <li>
-            <input
-              onChange={onChange}
-              value={inputTitle}
-              onKeyPress={onKeyPress}
-            />
-            <button onClick={()=>handleClick}>추가</button>
-          </li>
-        </ul>
-        <TodoItemBox
-          todos={todos}
-          getToggleState={getToggleState}
-        ></TodoItemBox>
-      </div>
-    </>
+        <TodoWrapper>
+          <h2>✅ Todo Done List</h2>
+          <TodoItemBox
+            todos={doneTodos}
+            onRemoveTodo={onRemoveTodo}
+            onToggleTodo={onToggleTodo}
+          ></TodoItemBox>
+        </TodoWrapper>
+      </TodoContainer>
+    </Container>
   );
 };
 
